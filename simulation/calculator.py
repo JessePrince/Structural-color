@@ -97,7 +97,7 @@ def calc_sisio2_response(
     inner_width: int,
     outer_width: int
 ) -> tuple[np.ndarray, list]:
-    """Calculate response of 
+    """Calculate response of Si-SiO2 core-shell structure
 
     Args:
         from_wl (int): Starting wavelength
@@ -155,7 +155,6 @@ def calc_sisio2_response(
         terms, Qext, Qsca, Qabs, Qbk, Qpr, g, Albedo, S1, S2 = scattnlay(np.array(x), np.array(m))
 
         # 散射截面
-        print(f"WL = {WL} nm, Qsca = {Qsca}")
         Qsca_vec.append(Qsca)
 
     return WLs, Qsca_vec
