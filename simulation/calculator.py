@@ -1,3 +1,6 @@
+# @ Copyright Fan Zhang, Hao Li, 2024
+# Project Structural Color / ColorNet
+
 from scattnlay import scattnlay, scattcoeffs
 import numpy as np
 
@@ -144,17 +147,15 @@ def calc_sisio2_response(
 
     Qsca_vec = []
 
-    # 遍历每个波长并计算Qsca
+    
     for i, WL in enumerate(WLs):
-        # 对于每个波长，调整粒子尺寸以匹配波长，使用当前WL对应的index_Si和index_Ag
-        current_index_Si = index_Si[i]  # 获取当前波长的Si折射率
-        current_index_SiO2 = index_SiO2[i]  # 获取当前波长的SiO2折射率
+        current_index_Si = index_Si[i]  
+        current_index_SiO2 = index_SiO2[i]  
         x, m= SetXM(inner_width, outer_width, WL=WL, index_Si=current_index_Si, index_SiO2=current_index_SiO2)
 
-        # 计算散射参数 (Qsca, Qext, Qabs)
-        terms, Qext, Qsca, Qabs, Qbk, Qpr, g, Albedo, S1, S2 = scattnlay(np.array(x), np.array(m))
+        
+        _, _, Qsca, _, _, _, _, _, _, _ = scattnlay(np.array(x), np.array(m))
 
-        # 散射截面
         Qsca_vec.append(Qsca)
 
     return WLs, Qsca_vec
