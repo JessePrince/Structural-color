@@ -80,7 +80,7 @@ def calc_si_response(
             np.array(x), np.array(m),
             mp=True
         )
-        print(np.array([Qsca]))
+        # print(np.array([Qsca]))
         _, an, bn = scattcoeffs(x, m, 24)
         Qsca_vec.append(Qsca)
         core_r_vec.append(core_r)
