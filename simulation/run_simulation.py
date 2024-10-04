@@ -9,7 +9,6 @@ from simulation.calculator import calc_si_response, calc_sisio2_response
 import argparse
 from pathlib import Path
 import json
-from tqdm import tqdm
 import numpy as np
 import simulation_engine
 import time
@@ -20,9 +19,8 @@ logging.basicConfig(level=logging.ERROR)
 def parse_aruments():
     parser = argparse.ArgumentParser('Run dataset simulation', add_help=False)
     parser.add_argument('--num_samples', default=1000, type=float)
-    parser.add_argument('--save_dir', default='data_output', type=str)
-    parser.add_argument('--is_multithreading', default=False, type=bool)
-    parser.add_argument('--material_type', default='si', choices=('si', 'sisio2', 'both'))
+    parser.add_argument('--save_dir', default='simulation/data_output', type=str)
+    parser.add_argument('--material_type', default='both', choices=('si', 'sisio2', 'both'))
     parser.add_argument('--sim_points', default=200, type=int)
     parser.add_argument('--min_wl_si', default=450, type=int)
     parser.add_argument('--max_wl_si', default=800, type=int)
@@ -34,6 +32,8 @@ def parse_aruments():
     parser.add_argument('--max_w_sisio2_inner', default=100, type=int)
     parser.add_argument('--min_w_sisio2_outer', default=1, type=int)
     parser.add_argument('--max_w_sisio2_outer', default=4, type=int)
+    parser.add_argument('--si_profile_dir', default="simulation/Si_Green_2008.txt", type=str)
+    parser.add_argument("--sio2_profile_dir", default="simulation/SiO2_Gao.txt", type=str)
     
     
     return parser

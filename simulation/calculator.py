@@ -28,7 +28,8 @@ def calc_si_response(
     from_wl: int,
     to_wl: int,
     wl_points: int,
-    core_r: int
+    core_r: int,
+    profile_dir: str
 ) -> tuple[np.ndarray, list]:
     """Calculate response of Si core, with given radius and wavelength profile
 
@@ -36,6 +37,7 @@ def calc_si_response(
         from_wl (int): Starting wavelength
         to_wl (int): Ending wavelength
         wl_points (int): Points used for discret calculation
+        profile_dir (str): path to si profile
 
     Returns:
         tuple[np.ndarray, list]: wavelength and response(scattering cross section), shape of wl_points
@@ -50,7 +52,7 @@ def calc_si_response(
 
     """
     # Load data from Si.txt
-    data = np.loadtxt('simulation/Si.txt', skiprows=1)  # skip the header row
+    data = np.loadtxt(profile_dir, skiprows=1)  # skip the header row
     wavelength_data = data[:, 0]
     real_data = data[:, 1]
     imag_data = data[:, 2]
@@ -98,7 +100,9 @@ def calc_sisio2_response(
     to_wl: int,
     wl_points: int,
     inner_width: int,
-    outer_width: int
+    outer_width: int,
+    si_profile_dir: str,
+    sio2_profile_dir: str
 ) -> tuple[np.ndarray, list]:
     """Calculate response of Si-SiO2 core-shell structure
 
@@ -108,6 +112,8 @@ def calc_sisio2_response(
         wl_points (int): points of the discret calculation
         inner_width (int): inner width(Si) of the structure
         outer_width (int): outer width(SiO2) of the structure
+        si_profile_dir (str): path to si profile
+        sio2_profile_dir (str): path to sio2 profile
 
     Returns:
         tuple[np.ndarray, list]: wavelength and response(scattering cross section), shape of wl_points
@@ -121,13 +127,13 @@ def calc_sisio2_response(
         >>> wl, response = calc_sisio2_response(from_wl, to_wl, wl_points, inner_width, outer_width)
     """
     # Load data from Si_Green_2008.txt
-    data_Si = np.loadtxt('Si_Green_2008.txt', skiprows=1)  # skip the header row
+    data_Si = np.loadtxt(si_profile_dir, skiprows=1)  # skip the header row
     wavelength_data_Si = data_Si[:, 0] * 1e3  # 转换为nm
     real_data_Si = data_Si[:, 1]
     imag_data_Si = data_Si[:, 2]
 
     # Load data from SiO2_Gao_2008.txt
-    data_SiO2 = np.loadtxt('SiO2_Gao.txt', skiprows=1)  # skip the header row
+    data_SiO2 = np.loadtxt(sio2_profile_dir, skiprows=1)  # skip the header row
     wavelength_data_SiO2 = data_SiO2[:, 0] * 1e3  # 转换为nm
     real_data_SiO2 = data_SiO2[:, 1]
     imag_data_SiO2 = data_SiO2[:, 2]
