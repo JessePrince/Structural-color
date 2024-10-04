@@ -50,7 +50,7 @@ def calc_si_response(
 
     """
     # Load data from Si.txt
-    data = np.loadtxt('Si.txt', skiprows=1)  # skip the header row
+    data = np.loadtxt('simulation/Si.txt', skiprows=1)  # skip the header row
     wavelength_data = data[:, 0]
     real_data = data[:, 1]
     imag_data = data[:, 2]
