@@ -5,7 +5,6 @@ import os
 import sys
 sys.path.append(os.getcwd())
 
-from simulation.calculator import calc_si_response, calc_sisio2_response
 import argparse
 from pathlib import Path
 import json
@@ -13,6 +12,7 @@ import numpy as np
 import simulation_engine
 import time
 import logging
+import math
 
 logging.basicConfig(level=logging.ERROR)
 
@@ -53,12 +53,15 @@ def main(args):
         params["sample_radius"] = np.linspace(args.min_r_si, args.max_r_si, int(args.num_samples))
 
     if args.material_type in ["sisio2", "both"]:
-        params["sample_radius_inner"] = np.linspace(args.min_w_sisio2_inner, args.max_w_sisio2_inner, int(args.num_samples // 2))
-        params["sample_radius_outer"] = np.linspace(args.min_w_sisio2_outer, args.max_w_sisio2_outer, int(args.num_samples // 2))
+        params["sample_radius_inner"] = np.linspace(args.min_w_sisio2_inner, args.max_w_sisio2_inner, math.ceil(math.sqrt(args.num_samples)))
+        params["sample_radius_outer"] = np.linspace(args.min_w_sisio2_outer, args.max_w_sisio2_outer, math.ceil(math.sqrt(args.num_samples)))
 
     # Handle multithreading
     for key in params:
-        params[key] = np.array_split(params[key], num_cpu)
+        if "sample_radius_inner" not in key:
+            params[key] = np.array_split(params[key], num_cpu)
+        else:
+            params[key] = [params[key]] * num_cpu
     
     start = time.time()
     full_data_list = simulation_engine.start_threading(params, args)    
@@ -67,9 +70,9 @@ def main(args):
         json.dump(full_data_list, fp, indent=4)
         fp.close()
         
-    print("Generation complete")
-    print("Total num samples:", len(full_data_list))
-    print("Time used", end-start)
+    print("\n\nGeneration complete")
+    print("\n\nTotal num samples:", len(full_data_list))
+    print("\n\nTime used", end-start, "seconds")
     
     
     

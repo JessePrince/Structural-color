@@ -41,8 +41,8 @@ def thread_sisio2_calc(
     sio2_profile_dir
 ):
     sample_dict_list = []
-    for inner_rad in tqdm(sample_radius_in, desc="Simulation loop for inner radius"):
-        for outter_rad in tqdm(sample_radius_out, desc="Simulation loop for outter radius"):
+    for inner_rad in tqdm(sample_radius_in, desc="Simulation loop for sisio2"):
+        for outter_rad in sample_radius_out:
             wl, response = calc_sisio2_response(min_wl_sisio2, max_wl_sisio2, sim_points, inner_rad, outter_rad, si_profile_dir, sio2_profile_dir)
             sample = wrap_data("sisio2", wl.tolist(), response)
             sample_dict_list.append(sample)
@@ -67,7 +67,7 @@ def start_threading(
         # Submit sisio2 simulation tasks
         if args.material_type in ["sisio2", "both"] and "sample_radius_inner" in params and "sample_radius_outer" in params:
             for inner_chunk, outer_chunk in zip(params["sample_radius_inner"], params["sample_radius_outer"]):
-                future = executor.submit(thread_sisio2_calc, inner_chunk, outer_chunk, args.min_wl_sisio2, args.max_wl_sisio2, args.sim_points, args.sio2_profile_dir)
+                future = executor.submit(thread_sisio2_calc, inner_chunk, outer_chunk, args.min_wl_sisio2, args.max_wl_sisio2, args.sim_points, args.si_profile_dir, args.sio2_profile_dir)
                 future_to_simulation[future] = "sisio2"
 
         # Collect results as they complete
