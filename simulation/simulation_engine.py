@@ -7,12 +7,14 @@ import concurrent.futures
 def wrap_data(
     material_type: str,
     wavelength: list,
-    response: list
+    response: list,
+    radius: dict
 ) -> dict:
     return {
         "type": material_type,
         "wl": wavelength,
-        "resp": response
+        "resp": response,
+        "rad": radius
     }
 
 def thread_si_calc(
@@ -25,7 +27,7 @@ def thread_si_calc(
     sample_dict_list = []
     for radius in tqdm(sample_radius, desc="Simulation for si"):
             wl, response = calc_si_response(min_wl_si, max_wl_si, sim_points, radius, profile_dir)
-            sample = wrap_data("si", wl.tolist(), response)
+            sample = wrap_data("si", wl.tolist(), response, {"core_rad": radius})
             sample_dict_list.append(sample)
             
     return sample_dict_list
@@ -44,7 +46,7 @@ def thread_sisio2_calc(
     for inner_rad in tqdm(sample_radius_in, desc="Simulation loop for sisio2"):
         for outter_rad in sample_radius_out:
             wl, response = calc_sisio2_response(min_wl_sisio2, max_wl_sisio2, sim_points, inner_rad, outter_rad, si_profile_dir, sio2_profile_dir)
-            sample = wrap_data("sisio2", wl.tolist(), response)
+            sample = wrap_data("sisio2", wl.tolist(), response, {"inner_rad": inner_rad, "outer_rad": outter_rad})
             sample_dict_list.append(sample)
             
     return sample_dict_list
